@@ -1,0 +1,38 @@
+// 背景图片地址和大小
+@mixin bis($url, $color: none, $size: 100%, $position: none) {
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-size: $size;
+  background-color: $color;
+  background-position: $position;
+}
+// flex布局 子元素对齐方式
+@mixin fj($type: flex-start) {
+  display: flex;
+  justify-content: $type;
+}
+
+// position布局
+@mixin pz($position: relative, $top: unset, $bottom: unset, $zIndex: unset) {
+  position: $position;
+  top: $top;
+  bottom: $bottom;
+  z-index: $zIndex;
+}
+
+// 单行超出省略
+@mixin singleEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 多行省略
+@mixin mulEllipsis($clamp: 2) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $clamp;
+  // -webkit-box-align: stretch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
