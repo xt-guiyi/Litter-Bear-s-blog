@@ -7,8 +7,8 @@
 -->
 <template>
   <div
-    class="panel-container animated"
-    :class="[isShow? 'panel-container-mouseover' : '', isBounceInUp? 'bounceInUp' : '']"
+    class="panel-container animated bounceInUp"
+    :class="[isShow? 'panel-container-mouseover' : '']"
     @mouseover="panelMouseover"
     @mouseout="panelMouseout"
     ref="ArticlePanelRef"
@@ -54,7 +54,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
+import useDomHide from '@/composable/useDomHide'
 export default defineComponent({
   name: 'ArticlePanel',
   props: {
@@ -94,22 +95,7 @@ export default defineComponent({
     const panelMouseout = function () {
       isShow.value = false
     }
-
-    onBeforeMount(() => {
-      // 这1s用来等待动画完成,然后执行代码
-      const timer = setTimeout(() => {
-        if (ArticlePanelRef.value !== null) {
-          // 不在可视区域内则隐藏
-          if (
-            ArticlePanelRef.value.getBoundingClientRect().y >= window.innerHeight ||
-            ArticlePanelRef.value.getBoundingClientRect().bottom <= 0
-          ) {
-            isBounceInUp.value = false
-          }
-        }
-        clearTimeout(timer)
-      }, 1000)
-    })
+    useDomHide(ArticlePanelRef)
     return {
       isShow,
       isBounceInUp,
@@ -127,7 +113,7 @@ export default defineComponent({
 .panel-container {
   height: 30rem;
   width: 100%;
-  visibility: hidden;
+  // visibility: hidden;
   margin-bottom: 3rem;
   @include bis($url:'../assets/image/4.jpg', $size: cover, $position: 50% 50%);
   overflow: hidden;
@@ -162,6 +148,7 @@ export default defineComponent({
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
+      transform: translate3d(0, -1rem, 0);
       .article-descript {
       font-size: 2rem;
       height: 4rem;
@@ -190,13 +177,7 @@ export default defineComponent({
     }
 }
 
-// 显示并进行动画
-.bounceInUp {
-  visibility: visible!important;
-  animation-name: bounceInUp ;
-}
 .panel-container-mouseover {
-  // transform: translateY( -4rem);
   box-shadow: 1px 3px 10px 5px rgb(255, 238, 0);
 }
 
@@ -205,9 +186,10 @@ export default defineComponent({
 }
 .panel-content-mouseover .title-mouseover {
   color: yellow;
-  transform: translate3d(0, -4.5rem, 0);
+  transform: scaleX(1.1) translate3d(0, -1.5rem, 0);
 }
 .panel-content-mouseover .panel-bottom-mouseover {
+  transform: none!important;
   opacity: 1!important;
 }
 </style>

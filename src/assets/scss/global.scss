@@ -7,6 +7,15 @@
   font-family: 楷体!important;
 }
 
+
+:root {
+  --bear-color-0: rgb(255, 255, 0);
+  --bear-color-1: rgb(200, 200, 200);
+  --bear-color-2: #ffeb3b;
+  --bear-color-3: #ffb7da;
+  --bear-color-4: #00F5FF;
+  --bear-color-5: #EE3B3B;
+}
 html, body, #app {
   font-size: 62.5%;
 }
@@ -18,17 +27,22 @@ width: 5px;
 
 body::-webkit-scrollbar-track{
 //再改变body的滚动条轨道颜色
-background: rgb(200, 200, 200);
+background: var(--bear-color-1);
 border-radius: 5px;
 }
 body::-webkit-scrollbar-thumb{
   //最后改变body的滚动条滑轨相关的样式
-background: rgb(255, 255, 0);
+background: var(--bear-color-0);
 border-radius: 5px;
 }
 
 ul li {
   list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 // 1px
@@ -43,4 +57,14 @@ ul li {
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
+}
+
+
+
+.hide {
+  visibility: hidden;
+}
+
+.show {
+  visibility: visible;
 }

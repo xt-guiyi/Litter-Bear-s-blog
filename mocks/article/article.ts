@@ -3,19 +3,18 @@
  * @Author: 小熊熊
  * @Date: 2020-11-06 18:20:29
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-06 19:07:43
+ * @LastEditTime: 2020-11-10 11:12:30
  */
 import Mock from 'mockjs'
-import { articleListData } from './data'
+import { articleListData, sentencesListDate } from './data'
 Mock.mock(
   'api/articleList',
   'get',
   articleListData
-  // () => {
-  //   return {
-  //     status: 200,
-  //     message: 'success',
-  //     data: articleListData
-  //   }
-  // }
+)
+
+Mock.mock(
+  'api/sentencesList',
+  'get',
+  sentencesListDate
 )

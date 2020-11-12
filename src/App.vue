@@ -3,21 +3,46 @@
  * @Author: 小熊熊
  * @Date: 2020-11-02 16:29:46
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-05 18:24:36
+ * @LastEditTime: 2020-11-12 11:27:02
 -->
 <template>
   <div class="bg"></div>
-  <blog-theme-one></blog-theme-one>
+  <base-login  @to-backstage="toBackstage" />
+  <blog-theme-one>
+    <template v-slot:blogThemeOneMain >
+      <router-view v-slot="{ Component, route }">
+        <transition :enter-active-class="route.meta.enterAnimated" :leave-active-class="route.meta.leaveAnimated" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </template>
+  </blog-theme-one>
 </template>
 
-<script>
-export default {
-
-}
+<script lang='ts'>
+import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+export default defineComponent({
+  setup () {
+    const router = useRouter()
+    const toBackstage = (data: boolean) => {
+      if (data) {
+        router.push({ name: 'Backstage' })
+      } else {
+        router.push({ name: 'Home' })
+      }
+      console.log(data)
+    }
+    return {
+      toBackstage
+    }
+  }
+})
 </script>
 <style lang="scss">
 #app {
   width: 100%;
+  overflow: hidden;
   .bg {
     background-image: url('./assets/image/bg.jpg');
     background-size: cover;

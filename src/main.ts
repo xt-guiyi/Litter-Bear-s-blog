@@ -11,10 +11,12 @@ import router from './router'
 import store from './store'
 import { registerLayout } from '@/layout/index'
 import { registerBase } from '@/components/base/index'
+import { loadAllPlugins } from '@/plugins/index'
 import '@/assets/scss/global.scss'
 import '../mocks/index'
 const app = createApp(App)
 // 注册全局组件
 registerLayout(app)
 registerBase(app)
+loadAllPlugins(app)
 app.use(store).use(router).mount('#app')
