@@ -6,8 +6,14 @@
  * @LastEditTime: 2020-11-12 10:18:44
  */
 
-export const WangEditorConfig = {
+export const releaseArticleConfig = {
   height: 800,
   placeholder: '请输入文字',
   zIndex: 500
+}
+
+export const releaseShortSentencesConfig = {
+  height: 500,
+  placeholder: '请输入文字',
+  zIndex: 1000
 }

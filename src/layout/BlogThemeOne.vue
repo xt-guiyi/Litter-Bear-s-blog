@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-04 10:36:17
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-12 11:18:54
+ * @LastEditTime: 2020-11-18 13:40:36
 -->
 <template>
   <header id="blog-header">
@@ -81,7 +81,7 @@ export default defineComponent({
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 999;
 }
 
 .header-nav {
@@ -101,6 +101,6 @@ export default defineComponent({
 }
 
 .router-link-active {
-  color: var(--bear-color-0);
+  color: var(--bear-color-0)!important;
 }
 </style>

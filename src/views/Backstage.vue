@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-11 10:32:26
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-12 13:54:54
+ * @LastEditTime: 2020-11-19 11:21:08
 -->
 <template>
   <div class="backstage-content">
@@ -15,13 +15,26 @@
         :tabBarStyle="tabBarStyle"
       >
         <a-tab-pane key="1" tab="发布随言">
-          Content of Tab Pane 1
+          <release-short-sentences />
         </a-tab-pane>
         <a-tab-pane key="2" tab="发布文章" force-render>
-          <wang-editor />
+          <release-article />
         </a-tab-pane>
         <a-tab-pane key="3" tab="发布小说">
-          Content of Tab Pane 3
+          发布小说
+        </a-tab-pane>
+        <a-tab-pane key="4" tab="内容管理">
+          <a-tabs type="card" @change="callback">
+            <a-tab-pane key="1" tab="随言管理">
+              随言管理
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="文章管理">
+              文章管理
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="小说管理">
+              小说管理
+            </a-tab-pane>
+          </a-tabs>
         </a-tab-pane>
       </a-tabs>
     </base-panel>
@@ -30,11 +43,13 @@
 
 <script lang='ts'>
 import { defineComponent, reactive } from 'vue'
-import WangEditor from '@/components/Wangeditor.vue'
+import ReleaseArticle from './ReleaseArticle.vue'
+import ReleaseShortSentences from './ReleaseShortSentences.vue'
 export default defineComponent({
   name: 'Backstage',
   components: {
-    WangEditor
+    ReleaseArticle,
+    ReleaseShortSentences
   },
   setup () {
     const tabBarStyle = reactive({

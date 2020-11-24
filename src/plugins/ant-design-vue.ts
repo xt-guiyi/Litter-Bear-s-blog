@@ -3,9 +3,9 @@
  * @Author: 小熊熊
  * @Date: 2020-11-11 14:12:33
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-12 13:39:48
+ * @LastEditTime: 2020-11-23 13:01:53
  */
-import { Form, message, Tabs, Tag, Tooltip, Input, Modal } from 'ant-design-vue'
+import { Form, message, Tabs, Tag, Tooltip, Input, Modal, Upload, Pagination, notification } from 'ant-design-vue'
 // import 'ant-design-vue/dist/antd.less'
 import { createApp } from 'vue'
 /**
@@ -20,6 +20,7 @@ message.config({
 
 export default function loadComponent (app: ReturnType<typeof createApp>) {
   app.config.globalProperties.$message = message
+  app.config.globalProperties.$notification = notification
   app
     .use(Form)
     .use(Tabs)
@@ -27,4 +28,6 @@ export default function loadComponent (app: ReturnType<typeof createApp>) {
     .use(Tooltip)
     .use(Input)
     .use(Modal)
+    .use(Upload)
+    .use(Pagination)
 }

@@ -21,6 +21,12 @@ module.exports = {
             // 'tabs-card-active-color': 'red',
             // 'tabs-hover-color': '#ffeb3b',
             // 'tabs-active-color': '#ffeb3b'
+            // 分页器样式设置
+            'pagination-item-size': '40px',
+            'pagination-item-size-sm': '26px',
+            'pagination-font-family': 'Arial',
+            'pagination-font-weight-active': '700'
+            // 'pagination-item-bg-active': ''
           },
           javascriptEnabled: true
         }

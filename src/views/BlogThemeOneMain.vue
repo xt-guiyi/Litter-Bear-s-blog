@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-11 10:11:54
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-12 11:20:12
+ * @LastEditTime: 2020-11-16 17:12:55
 -->
 <template>
   <main id="blog-main">
@@ -15,78 +15,89 @@
     </div>
     <div id="main-container">
       <div class="main-content">
-        <section class="carefully-chosen" ref="sectionRef">
-        <router-view v-slot="{ Component }">
-          <transition enter-active-class="animated bounceInUp">
-            <component :is="Component" />
-          </transition>
-        </router-view>
+        <section class="carefully-chosen" >
+          <div class="sectionWrap" ref="sectionWrapRef">
+            <router-view v-slot="{ Component }">
+              <transition enter-active-class="animated bounceInUp">
+                <component :is="Component" />
+              </transition>
+            </router-view>
+          </div>
         </section>
-        <aside class="asider-bar">
-          <!-- 个人介绍 -->
-          <base-panel height="25rem" margin="0 0 2rem 0" padding="none;">
-              <div class="personal-container">
-                <div class="personal-bg"></div>
-                <div class="avatar-container" >
-                  <a href="#">
-                    <img src="https://www.datealive.top/wp-content/uploads/2020/04/44b08f627e804f25953fdf1c4f0230d7400x400.jpeg" alt="点击登录">
-                  </a>
-                </div>
-                <div class="short-sentences">
-                  <span>一生一代一双人，争教两处销魂|</span>
-                </div>
-              </div>
-          </base-panel>
-          <!-- 访客介绍 -->
-          <base-panel height="25rem" margin="0 0 2rem 0">
-            <div class="visitors-info-container">
-              <div class="title">
-                欢迎来此，您是第<span>1</span>位访问的网友
-              </div>
-              <base-one-px/>
-            </div>
-          </base-panel>
-          <!-- 文章分类 -->
-          <base-panel height="50rem" margin="0 0 2rem 0">
-            <div class="visitors-info-container">
-              <table-change :titleSouce="titleInfoOne">
-                <table-pane :activeKey="1">
-                  <div class="info-content">
-                    1111
+        <aside class="asider-bar" >
+          <div
+            class="aside-wrap affix-initial"
+            ref="asideWrapRef"
+            :style="[isAffixBottom? affixTop : '']"
+            :class="[isAffixMove? 'affix-move' : '', isAffixBottom? 'affix-bottom' : '']"
+          >
+            <!-- 个人介绍 -->
+            <base-panel height="25rem" margin="0 0 2rem 0" padding="none;">
+                <div class="personal-container">
+                  <div class="personal-bg"></div>
+                  <div class="avatar-container" >
+                    <a href="#">
+                      <img src="https://www.datealive.top/wp-content/uploads/2020/04/44b08f627e804f25953fdf1c4f0230d7400x400.jpeg" alt="点击登录">
+                    </a>
                   </div>
-                </table-pane>
-              </table-change>
-            </div>
-          </base-panel>
-          <!-- 云标签 -->
-          <base-panel height="25rem" margin="0 0 2rem 0">
-            <div class="clould-tag-container">
-              <div class="title">
-                云标签
+                  <div class="short-sentences">
+                    <span>一生一代一双人，争教两处销魂|</span>
+                  </div>
+                </div>
+            </base-panel>
+            <!-- 访客介绍 -->
+            <base-panel height="25rem" margin="0 0 2rem 0">
+              <div class="visitors-info-container">
+                <div class="title">
+                  欢迎来此，您是第<span>1</span>位访问的网友
+                </div>
+                <base-one-px/>
               </div>
-              <base-one-px/>
-            </div>
-          </base-panel>
-          <!-- 最近评论 -->
-          <base-panel height="40rem" margin="0 0 2rem 0">
-            <div class="commont-container">
-              <div class="title">
-                最近评论
+            </base-panel>
+            <!-- 文章分类 -->
+            <base-panel height="50rem" margin="0 0 2rem 0">
+              <div class="visitors-info-container">
+                <table-change :titleSouce="titleInfoOne">
+                  <table-pane :activeKey="1">
+                    <div class="info-content">
+                      1111
+                    </div>
+                  </table-pane>
+                </table-change>
               </div>
-              <base-one-px/>
-            </div>
-          </base-panel>
+            </base-panel>
+            <!-- 云标签 -->
+            <base-panel height="25rem" margin="0 0 2rem 0">
+              <div class="clould-tag-container">
+                <div class="title">
+                  云标签
+                </div>
+                <base-one-px/>
+              </div>
+            </base-panel>
+            <!-- 最近评论 -->
+            <base-panel height="40rem" margin="0 0 2rem 0">
+              <div class="commont-container">
+                <div class="title">
+                  最近评论
+                </div>
+                <base-one-px/>
+              </div>
+            </base-panel>
+          </div>
         </aside>
       </div>
     </div>
   </main>
-
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onBeforeRouteUpdate } from 'vue-router'
+import { useStore } from 'vuex'
 import TableChange from '@/components/table/TableChange.vue'
 import TablePane from '@/components/table/TablePane.vue'
+import { throttle } from '@/utils/commonUse'
 export default defineComponent({
   name: 'BlogThemeOneMain',
   components: {
@@ -94,19 +105,86 @@ export default defineComponent({
     TablePane
   },
   setup () {
+    const store = useStore()
     // 标题
     const titleInfoOne = reactive([
       { title: '最新文章' },
       { title: '热点文章' },
       { title: '随机文章' }
     ])
-    // const Login = () => {
-    //   const isLogin = confirm('1')
-    //   context.emit('to-backstage', isLogin)
-    //   console.log(isLogin)
-    // }
+    const sectionWrapRef = ref<Element>()
+    const asideWrapRef = ref<Element>()
+    // 是否显示样式
+    const isAffixMove = computed(() => store.state.blogThemeOneMain.isAffixMove)
+    const isAffixBottom = computed(() => store.state.blogThemeOneMain.isAffixBottom)
+    // 初始top值
+    const initTop = ref<number>(0)
+    // top偏差值
+    const affixTop = reactive({
+      top: ''
+    })
+
+    /**
+     * 让aside停留在可视范围
+     */
+    let asideVisual = function () {
+      requestAnimationFrame(() => {
+        // 如果右边高度大于左边才进行计算
+        if (sectionWrapRef.value!.clientHeight >= asideWrapRef.value!.clientHeight) {
+        // console.log(sectionWrapRef.value.getBoundingClientRect().top)
+        // 如果左边向上滚动
+          if (sectionWrapRef.value!.getBoundingClientRect().height && sectionWrapRef.value!.getBoundingClientRect().top <= 75) {
+          // 如果 左边向上滚动的距离 > 左边与右边的高度之差 - 元素距离顶部初始高度
+          // 即左右两边元素底部相等
+            if (
+              -(sectionWrapRef.value!.getBoundingClientRect().top) >=
+            sectionWrapRef.value!.getBoundingClientRect().height -
+            asideWrapRef.value!.getBoundingClientRect().height - initTop.value
+            ) {
+            // console.log(true)
+            // isAffixMove.value = false
+            // isAffixBottom.value = true
+              store.dispatch('updateBlogThemeOneMain', { isAffixBottom: true, isAffixMove: false })
+              affixTop.top = `${(sectionWrapRef.value!.getBoundingClientRect().height -
+            asideWrapRef.value!.getBoundingClientRect().height - initTop.value)}px`
+            } else {
+            // console.log(false)
+            // isAffixMove.value = true
+            // isAffixBottom.value = false
+              store.dispatch('updateBlogThemeOneMain', { isAffixBottom: false, isAffixMove: true })
+            }
+          } else if (sectionWrapRef.value!.getBoundingClientRect().top >= 75) {
+            store.dispatch('updateBlogThemeOneMain', { isAffixBottom: false, isAffixMove: false })
+          // isAffixMove.value = false
+          }
+        }
+      })
+    }
+    asideVisual = throttle(asideVisual, 50, 25)
+    // 子路由更新重置值
+    onBeforeRouteUpdate((to, from, next) => {
+      // isAffixMove.value = false
+      // isAffixBottom.value = false
+      store.dispatch('updateBlogThemeOneMain', { isAffixBottom: false, isAffixMove: false })
+      next()
+    })
+    onMounted(() => {
+      // 更新top值
+      initTop.value = sectionWrapRef.value!.getBoundingClientRect().top
+
+      window.addEventListener('scroll', asideVisual)
+    })
+    onBeforeUnmount(() => {
+      window.removeEventListener('scroll', asideVisual)
+    })
+
     return {
-      titleInfoOne
+      titleInfoOne,
+      sectionWrapRef,
+      asideWrapRef,
+      isAffixMove,
+      isAffixBottom,
+      affixTop
     }
   }
 })
@@ -140,7 +218,6 @@ export default defineComponent({
 }
 
 #main-container {
-  // height: 165rem;
 
 }
 
@@ -150,12 +227,15 @@ export default defineComponent({
   display: flex;
 
   .carefully-chosen {
-    flex: 8;
+    width: 42vw;
+
   }
 
   .asider-bar {
-    flex: 4;
-    margin: 0 4rem;
+    width: 16vw;
+    margin-left: 2vw;
+    position: sticky;
+    top: 40px;
 
     .personal-container {
       height: 100%;
@@ -229,5 +309,23 @@ export default defineComponent({
         }
     }
   }
+
+  .aside-wrap{
+    width: inherit;
+  }
+
+  .affix-initial{
+    position: relative;
+  }
+
+  .affix-move {
+    position: fixed;
+    top: 7.5rem;
+  }
+
+  .affix-bottom {
+    position: absolute;
+  }
 }
+
 </style>

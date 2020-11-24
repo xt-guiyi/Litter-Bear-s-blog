@@ -3,21 +3,28 @@
  * @Author: 小熊熊
  * @Date: 2020-11-04 15:42:59
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-09 09:34:36
+ * @LastEditTime: 2020-11-18 13:36:52
 -->
 <template>
   <div
-    class="panel-container animated bounceInUp"
-    :class="[isShow? 'panel-container-mouseover' : '']"
+    class="panel-container  animated bounceInUp"
     @mouseover="panelMouseover"
     @mouseout="panelMouseout"
+    @click="toArticleDetail"
     ref="ArticlePanelRef"
   >
+    <img src="../../public/top.png" class="panel-top" v-if="isTop">
+    <div
+      class="panel-bg"
+      :class="[isShow? 'panel-bg-mouseover' : '']"
+      :style="{ backgroundImage: 'url('+bgImg+')'}"
+    >
+    </div>
     <div class="panel-content" :class="[isShow? 'panel-content-mouseover' : '']">
       <div class="panel-text">
-        <h2 class="title title-mouseover" >{{ articleName }}</h2>
+        <h2 class="title title-mouseover" >{{ articleTitle }}</h2>
         <div class="panel-bottom panel-bottom-mouseover" >
-          <p class="article-descript">{{ articleContent }}</p>
+          <p class="article-descript">{{ articleText }}</p>
           <div class="one-line"></div>
             <div class="article-info">
               <ul>
@@ -25,7 +32,7 @@
                   <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-tianchongxing-"></use>
                   </svg>
-                  {{ releaseTime }}
+                  {{ new Date(releaseTime).toLocaleString() }}
                 </li>
                 <li>
                   <svg class="icon" aria-hidden="true">
@@ -55,13 +62,18 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import useDomHide from '@/composable/useDomHide'
 export default defineComponent({
   name: 'ArticlePanel',
   props: {
-    articleName: {
+    articleTitle: {
       type: String,
       default: '文章标题'
+    },
+    articleText: {
+      type: String,
+      default: '文章描述'
     },
     articleContent: {
       type: String,
@@ -70,6 +82,10 @@ export default defineComponent({
     releaseTime: {
       type: String,
       default: '发布时间'
+    },
+    updatedTime: {
+      type: String,
+      default: '更新时间'
     },
     commentNumber: {
       type: Number,
@@ -82,18 +98,35 @@ export default defineComponent({
     likeNumber: {
       type: Number,
       default: 0
+    },
+    bgImg: {
+      type: String,
+      default: 'https://blog.api.xiaoyou66.com/assets/images/background/img120.jpg'
+    },
+    isTop: {
+      type: Boolean,
+      default: false
     }
   },
-  setup () {
+  setup (props) {
     const isShow = ref(false)
     const isBounceInUp = ref(true)
     const ArticlePanelRef = ref<Element | null>(null)
-    const panelMouseover = function () {
+    const router = useRouter()
+
+    function panelMouseover () {
       isShow.value = true
       isBounceInUp.value = true
     }
-    const panelMouseout = function () {
+    function panelMouseout () {
       isShow.value = false
+    }
+
+    function toArticleDetail () {
+      // 存本地
+      localStorage.setItem('article', JSON.stringify(props))
+      // 进入文章详情页
+      router.push({ name: 'ArticleDetailPanel' })
     }
     useDomHide(ArticlePanelRef)
     return {
@@ -101,7 +134,8 @@ export default defineComponent({
       isBounceInUp,
       panelMouseover,
       panelMouseout,
-      ArticlePanelRef
+      ArticlePanelRef,
+      toArticleDetail
     }
   }
 })
@@ -113,25 +147,48 @@ export default defineComponent({
 .panel-container {
   height: 30rem;
   width: 100%;
-  // visibility: hidden;
   margin-bottom: 3rem;
-  @include bis($url:'../assets/image/4.jpg', $size: cover, $position: 50% 50%);
-  overflow: hidden;
   border-radius: 0.6rem;
-  box-shadow: 1px 1px 1px 3px rgba(0,0,0, 1);
-  transition: all 0.3s ease-in;
+  box-shadow: 1px 1px 3px 1px rgba(0,0,0,.2)!important;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.panel-top{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.panel-bg {
+  height: inherit;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
 }
 
 .panel-content {
   width: 100%;
   height: 100%;
+  margin-top: -300px;
   padding-top: 12.5rem;
-  background-color:rgba(0,0,0, .1);
-  transition: background-color 0.2s ease-in;
+  background-color: rgba(0,0,0,.3)!important;
+  border-radius: 5px;
+  transition: all .3s;
+  color: #fff!important;
+  position: relative;
+  z-index: 100;
+  overflow: hidden;
   .panel-text {
     width: 90%;
     height: 100%;
-    color: white;
     margin: 0 auto;
     .title {
       width: 100%;
@@ -139,11 +196,12 @@ export default defineComponent({
       line-height: 5rem;
       font-size: 3.6rem;
       text-align: center;
-      transition: all 0.2s ease-in;
+      transition: all 0.3s;
+      @include singleEllipsis;
     }
     .panel-bottom {
       height: calc(100% - 50px);
-      transition: all 0.3s ease-in;
+      transition: all 0.3s;
       opacity: 0;
       display: flex;
       flex-direction: column;
@@ -163,6 +221,7 @@ export default defineComponent({
       }
       .article-info {
         margin: 1rem 0;
+        @include singleEllipsis;
         ul {
           display: flex;
           font-size: 1.5rem;
@@ -177,12 +236,12 @@ export default defineComponent({
     }
 }
 
-.panel-container-mouseover {
-  box-shadow: 1px 3px 10px 5px rgb(255, 238, 0);
+.panel-bg-mouseover {
+  filter:blur(2px);
+  transform: scale(1.05)
 }
 
 .panel-content-mouseover {
-  background-color:rgba(0, 0, 0, .5);
 }
 .panel-content-mouseover .title-mouseover {
   color: yellow;
@@ -191,5 +250,6 @@ export default defineComponent({
 .panel-content-mouseover .panel-bottom-mouseover {
   transform: none!important;
   opacity: 1!important;
+  z-index: -1;
 }
 </style>

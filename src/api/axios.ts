@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-10-29 18:54:34
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-06 19:05:40
+ * @LastEditTime: 2020-11-13 16:28:34
  */
 /*
  * axios封装
@@ -13,13 +13,12 @@
 import axios from 'axios'
 import { BaseUrl } from '@/config/axios'
 // base地址
-// axios.defaults.baseURL = BaseUrl
+axios.defaults.baseURL = BaseUrl
 
 // 创建axios实例
 const instance = axios.create({ timeout: 10000 })
 // 在instance上设置post请求头
-instance.defaults.headers.post['Content-Type'] =
-  'application/x-www-form-urlencoded'
+// axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded'
 
 // 请求拦截器
 instance.interceptors.request.use(config => {

@@ -49,3 +49,12 @@ export const boxPosition = (el: Element): DOMRect => {
 export const setAttribute = (el: Element, attrName: string, attrValue: string) => {
   el.setAttribute(attrName, attrValue)
 }
+
+/**
+ * 在当前节点后面插入一个节点
+ * @param currentEl 当前节点
+ * @param insertEl 插入节点
+ */
+export const insertNode = (currentEl: Element, insertEl: Element): void => {
+  currentEl.after(insertEl)
+}

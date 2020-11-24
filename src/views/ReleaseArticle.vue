@@ -1,8 +1,12 @@
 <template>
   <div>
     <div class="hd-space-between">
-      <div style="margin-right:2rem">
+      <!-- 图片上传 -->
+      <div class="upload-image">
+        <upload-image @on-change="getImgObj"></upload-image>
+      </div>
       <!-- 标签列表 -->
+      <div class="tag-list">
         <template v-for="(tag, index) in tags" :key="index">
           <a-tooltip v-if="tag.length > 20" :title="tag">
             <a-tag :key="tag" :closable="true" @close="handleClose(tag)" >
@@ -27,6 +31,7 @@
           <plus-outlined /> 添加新标签
         </a-tag>
       </div>
+      <!-- 发布文章 -->
       <div class="save-article">
         <p @click="modalVisible = true">发布文章</p>
           <a-modal
@@ -43,75 +48,76 @@
           </a-modal>
       </div>
     </div>
-    <div ref="editorRef"></div>
+    <div ref="editorToolbarRef"></div>
     <div class="title-container">
-      <input v-model="content.title" type="text" placeholder="无标题文章" class="title-input"/>
+      <input v-model="ArticleTitle" type="text" placeholder="无标题文章" class="title-input"/>
     </div>
     <div ref="editorContentRef" style="height: 50rem;"></div>
   </div>
 </template>
 
 <script lang="ts">
-import WangEditor from 'wangeditor'
-import { defineComponent, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
+import { app } from '@/main'
 import { PlusOutlined } from '@ant-design/icons-vue'
-import { WangEditorConfig } from '@/config/wangEditor'
 import useAddTag from '@/composable/useAddTag'
+import useWangEditor from '@/composable/useWangEditor'
+import UploadImage from '@/components/UploadImage.vue'
+import { submitArticle, ArticleData } from '@/api/article'
+import { releaseArticleConfig } from '@/config/wangEditor'
 
-type WangEditorContentType = {
-  title: string;
-  html: string;
-  text?: string;
-}
 export default defineComponent({
-  name: 'WangEditor',
+  name: 'ReleaseArticle',
   components: {
-    PlusOutlined
+    PlusOutlined,
+    UploadImage
   },
   setup () {
     // 编辑器菜单dom
-    const editorRef = ref()
+    const editorToolbarRef = ref()
     // 编辑器内容dom
     const editorContentRef = ref()
-    //  文章内容
-    const content = reactive<WangEditorContentType>({
-      title: '',
-      html: ''
-    })
     // 发布确认对话框
     const modalVisible = ref(false)
+    // 文章标题
+    const ArticleTitle = ref('')
+    // 添加标签
+    const { tags, inputRef, inputVisible, inputValue, handleClose, showInput, handleInputConfirm } = useAddTag()
+    // 添加编辑器
+    const { getWangEditorContent } = useWangEditor(releaseArticleConfig, editorToolbarRef, editorContentRef)
+    let imgUrl: string
 
-    // wangEditor实例
-    let instance: WangEditor
-    onMounted(() => {
-      // 挂载
-      instance = new WangEditor(editorRef.value, editorContentRef.value)
-      Object.assign(instance.config, WangEditorConfig, {
-        onchange () {
-          console.log('change')
-        }
-      })
-      instance.create()
-    })
-
-    onBeforeUnmount(() => {
-      // 取消挂载
-      instance.destroy()
-    })
+    // 获取图片url
+    function getImgObj (data: 'string') {
+      imgUrl = data
+    }
 
     // 发布文章
-    const uploadArticle = () => {
-      content.html = instance.txt.html() as string
-      console.log(content)
+    async function uploadArticle () {
+      const content = getWangEditorContent()
+      // 消除空格以及空行
+      ArticleTitle.value = ArticleTitle.value.replace(/&nbsp;|\s+/g, '')
+      const articleData: ArticleData = {
+        articleTitle: ArticleTitle.value,
+        articleContent: content.html,
+        articleText: content.text!,
+        tags: tags.value,
+        bgImg: imgUrl
+      }
+      if (articleData.articleTitle && articleData.articleContent && articleData.bgImg) {
+        const { data } = await submitArticle(articleData)
+        console.log(data)
+      } else {
+        app.config.globalProperties.$message.info('内容未填写完整')
+      }
       modalVisible.value = false
     }
 
-    const { tags, inputRef, inputVisible, inputValue, handleClose, showInput, handleInputConfirm } = useAddTag()
     return {
-      editorRef,
+      editorToolbarRef,
       editorContentRef,
       inputRef,
-      content,
+      ArticleTitle,
       modalVisible,
       tags,
       inputVisible,
@@ -119,18 +125,18 @@ export default defineComponent({
       handleClose,
       showInput,
       handleInputConfirm,
-      uploadArticle
-
+      uploadArticle,
+      getImgObj
     }
   }
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .hd-space-between {
   position: relative;
   padding: 0 20px;
-  height: 60px;
+  height: 6rem;
   border-bottom: 1px solid #e0e1e5;
   display: -webkit-flex;
   display: flex;
@@ -138,13 +144,29 @@ export default defineComponent({
   align-items: center;
   -webkit-flex-shrink: 0;
   flex-shrink: 0;
-  .tag-style {
+  position: relative;
+  .upload-image{
+    height: 3rem;
+    line-height: 3rem;
+    width: auto;
+    font-size: 1.6rem;
+    // position: absolute;
+    // left: 2rem;
+  }
+  .tag-list {
+    flex: 6;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    .tag-style {
     height: 2.5rem;
     line-height: 2.5rem;
+  }
   }
   .save-article {
     height: 3rem;
     line-height: 3rem;
+    flex: 1;
     font-size: 1.6rem;
     color: white;
     flex: 0 0 100px;

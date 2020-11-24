@@ -3,30 +3,45 @@
  * @Author: 小熊熊
  * @Date: 2020-11-04 11:42:33
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-10 11:16:54
+ * @LastEditTime: 2020-11-23 09:48:17
 -->
 <template>
-  <div class="article-list" ref="articleRef">
+  <div class="article-list" ref="homeRef">
     <article-panel
       v-for="(item, index) of articleList"
       :ref="(el) => { panelRefs[index] = el}"
       :key="index"
-      :articleName="item['articleName']"
+      :articleTitle="item['articleTitle']"
+      :articleText="item['articleText']"
       :articleContent="item['articleContent']"
-      :releaseTime="item['releaseTime']"
+      :releaseTime="item['createdAt']"
+      :updatedTime="item['updatedAt']"
       :commentNumber="item['commentNumber']"
       :readNumber="item['readNumber']"
       :likeNumber="item['likeNumber']"
+      :bgImg="item['bgImg']"
     />
-  </div>
+    <div class="pagination-container hide">
+      <a-pagination
+        v-model:current="currentPage"
+        v-model:pageSize="pageSize"
+        :total="articleTotal"
+        @change="changePage"
+        show-less-items
+      />
+    </div>
+</div>
 
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUpdate, reactive, ref } from 'vue'
+import { ComputedRef, defineComponent, ref, watchEffect } from 'vue'
+import { useStore } from 'vuex'
 import ArticlePanel from '@/components/ArticlePanel.vue'
-import { getArticleList } from '@/api/article/article'
 import useScrollEvent from '@/composable/useScrollEvent'
+import { getArticleList } from '@/api/article'
+import { PaginationData } from '@/api/types'
+import usePagination from '@/composable/usePagination'
 
 export default defineComponent({
   name: 'Home',
@@ -34,28 +49,37 @@ export default defineComponent({
     ArticlePanel
   },
   setup () {
+    const store = useStore()
     // 精选文章列表
-    const articleList = reactive([])
+    const articleList = ref(['', '', '', '', '', '', ''])
     // 文章dom数组
-    const articleRef = ref(null)
+    const homeRef = ref(null)
     const panelRefs = ref<Element[]>([])
-    // 重置dom
-    onBeforeUpdate(() => {
-      panelRefs.value = []
-    })
+    const { currentPage, pageSize, articleTotal, paginationParameter, changePage } = usePagination()
     // 发送请求
-    const sendArticleList = async () => {
-      const { data } = await getArticleList()
-      data.forEach((item: never) => {
-        articleList.push(item)
-      })
+    async function sendArticleList (paginationParameter: ComputedRef<PaginationData>) {
+      console.log(paginationParameter.value)
+
+      const { data } = await getArticleList(paginationParameter.value)
+      articleList.value = data.articleList
+      articleTotal.value = data.total
     }
-    sendArticleList()
-    useScrollEvent(articleRef)
+    // 响应式副作用
+    watchEffect(() => {
+      store.dispatch('updateBlogThemeOneMain', { isAffixBottom: false, isAffixMove: false })
+      window.scroll(0, 0)
+      sendArticleList(paginationParameter)
+    })
+
+    useScrollEvent(homeRef)
     return {
-      articleRef,
+      homeRef,
       articleList,
-      panelRefs
+      panelRefs,
+      currentPage,
+      pageSize,
+      articleTotal,
+      changePage
     }
   }
 
@@ -63,5 +87,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-
+.pagination-container{
+  height: 10rem;
+  line-height: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;;
+}
 </style>

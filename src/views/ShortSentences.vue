@@ -18,36 +18,73 @@
           <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-rili"></use>
           </svg>
-          {{ item.releaseTime }}
+          {{ new Date(item.createdAt).toLocaleString() }}
         </div>
-        <article class="content">
-          <p>
-            {{ item.articleContent }}
-          </p>
+        <article class="content"  v-html="item.shortSentencesHtml">
         </article>
       </div>
     </base-panel>
+    <div class="pagination-container">
+      <a-pagination
+        v-model:current="currentPage"
+        v-model:pageSize="pageSize"
+        :total="shortSentencesTotal"
+        @change="changePage"
+        show-less-items
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
-import { getSentencesList } from '@/api/article/article'
+import { computed, ComputedRef, defineComponent, ref, watchEffect } from 'vue'
+import { useStore } from 'vuex'
+import { getSentencesList } from '@/api/shortSentences'
+import { PaginationData } from '@/api/types'
 export default defineComponent({
   name: 'ShortSentences',
   setup () {
+    const store = useStore()
+
     // 句子列表
-    const sentencesLitst = reactive([])
+    const sentencesLitst = ref([])
+    // 分页器
+    const currentPage = ref(1)
+    const pageSize = ref(12)
+    const shortSentencesTotal = ref(0)
+    const paginationParameter = computed<PaginationData>(() => {
+      return {
+        limit: pageSize.value,
+        offset: pageSize.value * (currentPage.value - 1)
+      }
+    })
     // 发送请求
-    const sendSentencesList = async () => {
-      const { data } = await getSentencesList()
-      data.forEach((item: never) => {
-        sentencesLitst.push(item)
-      })
+    async function sendSentencesList (paginationParameter: ComputedRef<PaginationData>) {
+      const { data } = await getSentencesList(paginationParameter.value)
+      console.log(data)
+      sentencesLitst.value = data.shortSentencesList
+      shortSentencesTotal.value = data.total
     }
-    sendSentencesList()
+
+    watchEffect(() => {
+      store.dispatch('updateBlogThemeOneMain', { isAffixBottom: false, isAffixMove: false })
+      window.scroll(0, 0)
+      sendSentencesList(paginationParameter)
+    })
+
+    function changePage (newPage: number, newPageSize: number) {
+      console.log(newPage, newPageSize)
+      currentPage.value = newPage
+      pageSize.value = newPageSize
+    }
+
     return {
-      sentencesLitst
+      sentencesLitst,
+      currentPage,
+      pageSize,
+      shortSentencesTotal,
+      changePage
+
     }
   }
 })
@@ -66,8 +103,19 @@ export default defineComponent({
   }
 
   .content {
+    width: 90%;
+    height: auto;
+    overflow-wrap: break-word;
     font-size: 2rem;
     text-align: center;
   }
+}
+
+.pagination-container{
+  height: 10rem;
+  line-height: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;;
 }
 </style>

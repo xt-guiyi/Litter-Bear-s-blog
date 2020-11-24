@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Author: 小熊熊
+ * @Date: 2020-11-12 14:24:04
+ * @LastEditors: 小熊熊
+ * @LastEditTime: 2020-11-24 18:17:32
+ */
 import { onBeforeUnmount, Ref } from 'vue'
 import { throttle } from '@/utils/commonUse'
 import { addClass, boxPosition } from '@/utils/dom'
@@ -12,12 +19,17 @@ export default function useScrollEvent (domRef: Ref<Element | null>) {
       const domRefChildren = domRef.value.children
       if (domRefChildren !== undefined) {
         for (let i = 0; i < domRefChildren.length; i++) {
+          // console.log(domRefChildren[i].className)
           // 如果当前元素不在可视区域上
           if (
             boxPosition(domRefChildren[i]).y < (window.innerHeight) * 0.95 &&
             boxPosition(domRefChildren[i]).y > 0
           ) {
-            addClass(domRefChildren[i], 'show', 'animated', 'bounceInUp')
+            if (domRefChildren[i].className === 'pagination-container hide') {
+              addClass(domRefChildren[i], 'show', 'animated', 'swing')
+            } else if (domRefChildren[i].className === 'panel-container hide') {
+              addClass(domRefChildren[i], 'show', 'animated', 'bounceInUp')
+            }
           }
         }
       }
