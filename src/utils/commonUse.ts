@@ -22,6 +22,7 @@ export const throttle = function (func: Function, wait: number, mustRun: number)
   }
 }
 
+/** 把时间戳转换成相应的：刚刚，小时前，天前， 月-天-时-秒， 年-月-天-时-秒 */
 export function transformTimes (time: string) {
   const dateTime = new Date(time) // 将传进来的字符串或者毫秒转为标准时间
   const year = dateTime.getFullYear()
@@ -29,11 +30,9 @@ export function transformTimes (time: string) {
   const day = dateTime.getDate()
   const hour = dateTime.getHours()
   const minute = dateTime.getMinutes()
-  // var second = dateTime.getSeconds()
   const beforeTime = dateTime.getTime() // 将传进来的时间转换为毫秒
   const now = new Date() // 获取本机当前的时间
   const currentTime = now.getTime() // 将本机的时间转换为毫秒
-  // const milliseconds = 0
   let timeSpanStr
   const timeDate = currentTime - beforeTime
 
@@ -51,4 +50,18 @@ export function transformTimes (time: string) {
     timeSpanStr = year + '-' + month + '-' + day + ' ' + hour + ':' + minute
   }
   return timeSpanStr
+}
+
+/** 保留年和月 */
+export function transformYearAndMonth (time: string) {
+  const dateTime = new Date(time)
+  const year = dateTime.getFullYear().toString()
+  const month = (dateTime.getMonth() + 1 + '').padStart(2, '0')
+  return `${year}年${month}月`
+}
+
+/** 保留几号 */
+export function transformDate (time: string) {
+  const day = new Date(time).getDate()
+  return `${day}号`
 }

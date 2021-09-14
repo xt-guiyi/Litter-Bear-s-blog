@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-04 10:36:17
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-18 13:40:36
+ * @LastEditTime: 2021-07-28 19:07:23
 -->
 <template>
   <header id="blog-header">
@@ -18,7 +18,7 @@
           </router-link>
         </li>
         <li class="nav-2">
-          <router-link :to="{ name: 'ShortSentences'}" >
+          <router-link :to="{ name: 'ShortSentences'}">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-bi"></use>
             </svg>
@@ -26,34 +26,44 @@
           </router-link>
         </li>
         <li class="nav-3">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-wenzhang-copy"></use>
-          </svg>
-          文章
+          <router-link :to="{ name:'Article'}" >
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-wenzhang-copy"></use>
+            </svg>
+            文章
+          </router-link>
         </li>
         <li class="nav-4">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-tubiao1shuxiaoshuo"></use>
-          </svg>
-          小说
+          <router-link :to="{ name:'RecommendedNovel'}" >
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-tubiao1shuxiaoshuo"></use>
+            </svg>
+            小说
+          </router-link>
         </li>
         <li class="nav-5">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-guidang"></use>
-          </svg>
-          归档
+          <router-link :to="{ name:'PlaceOnFile'}" >
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-guidang"></use>
+              </svg>
+              归档
+            </router-link>
         </li>
         <li class="nav-6">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-relevance"></use>
-          </svg>
-          友链
+          <router-link :to="{ name:'FriendlyLink'}" >
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-relevance"></use>
+            </svg>
+            友链
+          </router-link>
         </li>
         <li class="nav-7">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-guanyuwomen"></use>
-          </svg>
-          关于我
+          <router-link :to="{ name:'AboutMe'}" >
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-guanyuwomen"></use>
+            </svg>
+            关于我
+          </router-link>
         </li>
       </ul>
     </nav>
@@ -96,11 +106,23 @@ export default defineComponent({
     li {
       flex: auto;
       cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      a {
+        height: 4rem;
+        line-height: 4rem;
+        color: white;
+        &:hover {
+          outline: 0;
+          background-color: transparent;
+          text-decoration: none;
+          color:var(--bear-color-0);
+        }
+
+      }
     }
   }
 }
 
-.router-link-active {
-  color: var(--bear-color-0)!important;
-}
 </style>

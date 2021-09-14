@@ -1,12 +1,12 @@
 <!--
  * @Description:
  * @Author: 小熊熊
- * @Date: 2020-11-04 11:42:33
+ * @Date: 2020-11-25 10:30:24
  * @LastEditors: 小熊熊
- * @LastEditTime: 2021-07-16 19:21:12
+ * @LastEditTime: 2020-11-25 13:53:21
 -->
 <template>
-  <div class="article-list" ref="homeRef">
+  <div class="article-list" ref="articleRef">
     <article-panel
       v-for="(item, index) of articleList"
       :ref="(el) => { panelRefs[index] = el}"
@@ -21,7 +21,6 @@
       :readNumber="item['readNumber']"
       :likeNumber="item['likeNumber']"
       :bgImg="item['bgImg']"
-      :isTop="item['isTop']"
     />
     <div class="pagination-container hide" >
       <a-pagination
@@ -37,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { ComputedRef, defineComponent, ref, watchEffect, nextTick } from 'vue'
+import { ComputedRef, defineComponent, ref, watchEffect } from 'vue'
 import { useStore } from 'vuex'
 import ArticlePanel from '@/components/ArticlePanel.vue'
 import useScrollEvent from '@/composable/useScrollEvent'
@@ -52,22 +51,19 @@ export default defineComponent({
   },
   setup () {
     const store = useStore()
-    // 精选文章列表
+    // 文章列表
     const articleList = ref(['', '', '', '', '', '', ''])
     // 文章dom数组
-    const homeRef = ref(null)
+    const articleRef = ref(null)
     const panelRefs = ref<Element[]>([])
     const { currentPage, pageSize, articleTotal, paginationParameter, changePage } = usePagination()
     // 发送请求
     async function sendArticleList (paginationParameter: ComputedRef<PaginationData>) {
-      const articlePaginationParameter = {
-        ...paginationParameter.value,
-        isTop: true
-      }
-      const { data } = await getArticleList(articlePaginationParameter)
+      console.log(paginationParameter.value)
+
+      const { data } = await getArticleList(paginationParameter.value)
       articleList.value = data.articleList
       articleTotal.value = data.total
-      console.log(data)
     }
     // 响应式副作用
     watchEffect(() => {
@@ -75,11 +71,10 @@ export default defineComponent({
       window.scroll(0, 0)
       sendArticleList(paginationParameter)
     })
-    nextTick(() => {
-      useScrollEvent(homeRef)
-    })
+
+    useScrollEvent(articleRef)
     return {
-      homeRef,
+      articleRef,
       articleList,
       panelRefs,
       currentPage,

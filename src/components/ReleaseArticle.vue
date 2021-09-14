@@ -5,6 +5,9 @@
       <div class="upload-image">
         <upload-image @on-change="getImgObj"></upload-image>
       </div>
+      <div class="is-top">
+        <label for="isTop">是否置顶</label><input v-model="isTop" type="checkbox" id="isTop">
+      </div>
       <!-- 标签列表 -->
       <div class="tag-list">
         <template v-for="(tag, index) in tags" :key="index">
@@ -85,6 +88,8 @@ export default defineComponent({
     const { tags, inputRef, inputVisible, inputValue, handleClose, showInput, handleInputConfirm } = useAddTag()
     // 添加编辑器
     const { getWangEditorContent } = useWangEditor(releaseArticleConfig, editorToolbarRef, editorContentRef)
+    // 文章是否置顶
+    const isTop = ref(false)
     let imgUrl: string
 
     // 获取图片url
@@ -102,7 +107,8 @@ export default defineComponent({
         articleContent: content.html,
         articleText: content.text!,
         tags: tags.value,
-        bgImg: imgUrl
+        bgImg: imgUrl,
+        isTop: isTop.value
       }
       if (articleData.articleTitle && articleData.articleContent && articleData.bgImg) {
         const { data } = await submitArticle(articleData)
@@ -126,7 +132,8 @@ export default defineComponent({
       showInput,
       handleInputConfirm,
       uploadArticle,
-      getImgObj
+      getImgObj,
+      isTop
     }
   }
 })
@@ -153,8 +160,25 @@ export default defineComponent({
     // position: absolute;
     // left: 2rem;
   }
+
+  .is-top{
+    flex: 2;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 2rem;
+    label {
+      margin: 0 1rem 0 1rem;
+      cursor: pointer;
+    }
+    input {
+      width: 2rem;
+      height: 2rem;
+      vertical-align: text-bottom;
+      cursor: pointer;
+    }
+  }
   .tag-list {
-    flex: 6;
+    flex: 4;
     margin-right: 1rem;
     display: flex;
     justify-content: flex-end;

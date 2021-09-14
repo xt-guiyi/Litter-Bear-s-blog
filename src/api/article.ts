@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-06 19:03:06
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-24 10:44:20
+ * @LastEditTime: 2020-11-26 09:56:07
  */
 import axios from './axios'
 import { PaginationData } from './types'
@@ -22,6 +22,7 @@ export interface ArticleData {
   articleText: string;
   tags: string[];
   bgImg: string;
+  isTop: boolean;
 }
 /**
  * 发布文章
@@ -32,9 +33,9 @@ export function submitArticle (data: ArticleData) {
 }
 
 export interface ArticleCommentPaginationData {
-  articleTitle: string;
-  limit: number;
-  offset: number;
+  articleId: string;
+  limit?: number;
+  offset?: number;
 }
 
 /**
@@ -52,7 +53,7 @@ export interface ArticleComment {
   email: string;
   website?: string;
   commentContent: string;
-  articleTitle: string;
+  articleId: string;
 }
 /**
  * 发表文章评论

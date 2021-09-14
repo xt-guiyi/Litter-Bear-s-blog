@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-11 10:11:54
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-16 17:12:55
+ * @LastEditTime: 2021-07-16 20:05:05
 -->
 <template>
   <main id="blog-main">
@@ -18,7 +18,8 @@
         <section class="carefully-chosen" >
           <div class="sectionWrap" ref="sectionWrapRef">
             <router-view v-slot="{ Component }">
-              <transition enter-active-class="animated bounceInUp">
+              <!-- enter-active-class="animated bounceInUp" -->
+              <transition >
                 <component :is="Component" />
               </transition>
             </router-view>
@@ -37,7 +38,7 @@
                   <div class="personal-bg"></div>
                   <div class="avatar-container" >
                     <a href="#">
-                      <img src="https://www.datealive.top/wp-content/uploads/2020/04/44b08f627e804f25953fdf1c4f0230d7400x400.jpeg" alt="点击登录">
+                      <!-- <img src="https://www.datealive.top/wp-content/uploads/2020/04/44b08f627e804f25953fdf1c4f0230d7400x400.jpeg" alt="点击登录"> -->
                     </a>
                   </div>
                   <div class="short-sentences">
@@ -244,7 +245,7 @@ export default defineComponent({
 
       .personal-bg {
         flex: 0 0 12.5rem;
-        background:url(https://www.datealive.top/wp-content/uploads/2020/04/preview.jpg) no-repeat center center;
+        // background:url(https://www.datealive.top/wp-content/uploads/2020/04/preview.jpg) no-repeat center center;
         -webkit-background-size:cover;
         background-size:cover;
         border-top-left-radius: 10px;

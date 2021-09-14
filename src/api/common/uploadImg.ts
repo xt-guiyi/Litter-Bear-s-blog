@@ -11,7 +11,6 @@ import axios from '../axios'
  * 上传图片
  * @description 无
  */
-
 export function getArticleList (data: FormData) {
   return axios.post('api/upload/images', data)
 }

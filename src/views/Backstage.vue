@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-11 10:32:26
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-19 11:21:08
+ * @LastEditTime: 2020-12-08 21:25:44
 -->
 <template>
   <div class="backstage-content">
@@ -26,10 +26,10 @@
         <a-tab-pane key="4" tab="内容管理">
           <a-tabs type="card" @change="callback">
             <a-tab-pane key="1" tab="随言管理">
-              随言管理
+              <short-sentences-manage/>
             </a-tab-pane>
             <a-tab-pane key="2" tab="文章管理">
-              文章管理
+              文章管理 // 修改图片， 修改标签， 修改内容， 修改置顶，删除
             </a-tab-pane>
             <a-tab-pane key="3" tab="小说管理">
               小说管理
@@ -43,13 +43,15 @@
 
 <script lang='ts'>
 import { defineComponent, reactive } from 'vue'
-import ReleaseArticle from './ReleaseArticle.vue'
-import ReleaseShortSentences from './ReleaseShortSentences.vue'
+import ReleaseArticle from '@/components/ReleaseArticle.vue'
+import ReleaseShortSentences from '@/components/ReleaseShortSentences.vue'
+import ShortSentencesManage from '@/components/ShortSentencesManage.vue'
 export default defineComponent({
   name: 'Backstage',
   components: {
     ReleaseArticle,
-    ReleaseShortSentences
+    ReleaseShortSentences,
+    ShortSentencesManage
   },
   setup () {
     const tabBarStyle = reactive({

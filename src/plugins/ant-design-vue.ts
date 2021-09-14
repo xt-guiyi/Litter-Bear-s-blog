@@ -3,9 +3,9 @@
  * @Author: 小熊熊
  * @Date: 2020-11-11 14:12:33
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-23 13:01:53
+ * @LastEditTime: 2020-12-08 21:28:19
  */
-import { Form, message, Tabs, Tag, Tooltip, Input, Modal, Upload, Pagination, notification } from 'ant-design-vue'
+import { Form, message, Tabs, Tag, Tooltip, Input, Modal, Upload, Pagination, notification, Table } from 'ant-design-vue'
 // import 'ant-design-vue/dist/antd.less'
 import { createApp } from 'vue'
 /**
@@ -30,4 +30,5 @@ export default function loadComponent (app: ReturnType<typeof createApp>) {
     .use(Modal)
     .use(Upload)
     .use(Pagination)
+    .use(Table)
 }

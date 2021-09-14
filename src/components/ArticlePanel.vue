@@ -3,11 +3,12 @@
  * @Author: 小熊熊
  * @Date: 2020-11-04 15:42:59
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-18 13:36:52
+ * @LastEditTime: 2021-07-16 15:40:45
 -->
 <template>
+<!-- animated bounceInUp -->
   <div
-    class="panel-container  animated bounceInUp"
+    class="panel-container"
     @mouseover="panelMouseover"
     @mouseout="panelMouseout"
     @click="toArticleDetail"
@@ -71,6 +72,10 @@ export default defineComponent({
       type: String,
       default: '文章标题'
     },
+    articleId: {
+      type: String,
+      default: '文章id'
+    },
     articleText: {
       type: String,
       default: '文章描述'
@@ -100,8 +105,7 @@ export default defineComponent({
       default: 0
     },
     bgImg: {
-      type: String,
-      default: 'https://blog.api.xiaoyou66.com/assets/images/background/img120.jpg'
+      type: String
     },
     isTop: {
       type: Boolean,
@@ -152,6 +156,7 @@ export default defineComponent({
   box-shadow: 1px 1px 3px 1px rgba(0,0,0,.2)!important;
   transition: all 0.3s;
   overflow: hidden;
+  position: relative;
 }
 
 .panel-top{
@@ -198,6 +203,7 @@ export default defineComponent({
       text-align: center;
       transition: all 0.3s;
       @include singleEllipsis;
+      cursor: pointer;
     }
     .panel-bottom {
       height: calc(100% - 50px);

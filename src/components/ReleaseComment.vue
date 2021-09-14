@@ -55,7 +55,7 @@ export default defineComponent({
       type: String,
       required: true
     },
-    articleTitle: {
+    articleId: {
       type: String,
       required: true
     }
@@ -111,7 +111,7 @@ export default defineComponent({
       }
     }
     const componentInstall = getCurrentInstance()
-    const { parentCommentId, byNickname, articleTitle } = toRefs(props)
+    const { parentCommentId, byNickname, articleId } = toRefs(props)
     console.log(parentCommentId)
     // console.log(byNickname)
     /** 响应取消回复事件 */
@@ -139,7 +139,7 @@ export default defineComponent({
           nickname: commentFormData.nickname,
           email: commentFormData.email,
           commentContent: commentFormData.commentContent,
-          articleTitle: articleTitle.value
+          articleId: articleId.value
         }
 
         if (commentFormData.website) {

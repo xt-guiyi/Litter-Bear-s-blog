@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-15 15:34:09
  * @LastEditors: 小熊熊
- * @LastEditTime: 2020-11-24 18:25:48
+ * @LastEditTime: 2020-11-26 09:50:32
 -->
 <template>
   <div id="s" class="panel-container">
@@ -67,7 +67,7 @@
           :showCancelReply="showCancelReply"
           :byNickname="byNickname"
           :parentCommentId="parentCommentId"
-          :articleTitle="articleData.articleTitle"
+          :articleId="articleData.articleId"
           />
       </div>
     </div>
@@ -145,7 +145,7 @@ export default defineComponent({
     // 发送请求
     async function sendArticleCommentData (paginationParameter: ComputedRef<PaginationData>) {
       const parameter: ArticleCommentPaginationData = Object.assign(paginationParameter.value, {
-        articleTitle: articleData.articleTitle
+        articleId: articleData.articleId as string
       })
 
       const { data } = await getArticleComment(parameter)

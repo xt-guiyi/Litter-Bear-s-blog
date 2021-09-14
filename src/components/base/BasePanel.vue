@@ -60,7 +60,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped  vars="{ height, margin, padding, minHeight }">
+<style lang="scss"   vars="{ height, margin, padding, minHeight }">
 .base-panel-container {
   height: var(--height);
   min-height: var(--minHeight);
