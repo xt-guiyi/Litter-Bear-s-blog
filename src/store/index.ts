@@ -13,17 +13,25 @@ export default createStore({
     blogThemeOneMain: {
       isAffixBottom: false,
       isAffixMove: false
-    }
+    },
+    websiteInfo: {}
   },
   mutations: {
     updateBlogThemeOneMain (state, { isAffixBottom, isAffixMove }) {
       state.blogThemeOneMain.isAffixBottom = isAffixBottom
       state.blogThemeOneMain.isAffixMove = isAffixMove
+    },
+
+    updateWebsiteInfo (state, data) {
+      state.websiteInfo = data
     }
   },
   actions: {
     updateBlogThemeOneMain ({ commit }, payload) {
       commit('updateBlogThemeOneMain', payload)
+    },
+    updateWebsiteInfo ({ commit }, payload) {
+      commit('updateWebsiteInfo', payload)
     }
   },
   modules: {

@@ -61,6 +61,7 @@ export default defineComponent({
   text-align: center;
   background-color: white;
   border-bottom: 1px solid silver;
+  margin-bottom: 1rem;
 }
 .table-main {
   height: 100%;

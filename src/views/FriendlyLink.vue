@@ -11,18 +11,39 @@
       <h5 class="title">小伙伴们</h5>
       <base-one-px/>
       <div class="links">
-        <base-link v-for="(item, index) in 20" :key="index"/>
+        <base-link v-for="(item, index) in friendlyLinks" :key="index"/>
       </div>
       <base-one-px/>
       <div class="my-website">
         <h6>站点信息</h6>
-        <p>站点名称：小星星滚呀滚</p>
-        <p>站点描述：你开心，我随意。</p>
-        <p>站点地址：https://xiaoyou66.com</p>
+        <p>站点名称：{{websiteInfo.websiteName}}</p>
+        <p>站点描述：{{websiteInfo.websiteDescription}}</p>
+        <p>站点地址：<a :href="websiteInfo.websiteUrl">{{websiteInfo.websiteUrl}}</a></p>
       </div>
     </base-panel>
   </div>
 </template>
+
+<script setup lang="ts">
+import { getFriendlyLink } from '@/api/friendlyLink'
+import { computed, onMounted, ref } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+export const friendlyLinks = ref([])
+export const websiteInfo = computed(() => store.state.websiteInfo)
+
+const getFriendlyLinks = async () => {
+  const { data } = await getFriendlyLink()
+  if (data.status === 200) {
+    friendlyLinks.value = data.data
+  }
+}
+
+onMounted(() => {
+  getFriendlyLinks()
+})
+</script>
 
 <style lang="scss">
   .title {

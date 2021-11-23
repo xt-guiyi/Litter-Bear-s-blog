@@ -3,7 +3,7 @@
  * @Author: 小熊熊
  * @Date: 2020-11-11 10:11:54
  * @LastEditors: 小熊熊
- * @LastEditTime: 2021-07-16 20:05:05
+ * @LastEditTime: 2021-11-19 22:32:47
 -->
 <template>
   <main id="blog-main">
@@ -38,11 +38,11 @@
                   <div class="personal-bg"></div>
                   <div class="avatar-container" >
                     <a href="#">
-                      <!-- <img src="https://www.datealive.top/wp-content/uploads/2020/04/44b08f627e804f25953fdf1c4f0230d7400x400.jpeg" alt="点击登录"> -->
+                      <img :src="websiteInfo.webmasterUrl" alt="点击登录">
                     </a>
                   </div>
                   <div class="short-sentences">
-                    <span>一生一代一双人，争教两处销魂|</span>
+                    <span>{{websiteInfo.WebmasterPersonalSignature}}</span>
                   </div>
                 </div>
             </base-panel>
@@ -60,9 +60,31 @@
               <div class="visitors-info-container">
                 <table-change :titleSouce="titleInfoOne">
                   <table-pane :activeKey="1">
-                    <div class="info-content">
-                      1111
-                    </div>
+                      <ul>
+                        <li class="info-content" v-for="(item,index) in articlesFilterLists.fresh" :key="index">
+                          <a href="#" >
+                            {{item.articleText}}
+                          </a>
+                        </li>
+                      </ul>
+                  </table-pane>
+                  <table-pane :activeKey="2" >
+                      <ul>
+                        <li class="info-content" v-for="(item,index) in articlesFilterLists.hotSpot" :key="index">
+                          <a href="#" >
+                            {{item.articleText}}
+                          </a>
+                        </li>
+                      </ul>
+                  </table-pane>
+                  <table-pane :activeKey="3" >
+                      <ul>
+                        <li class="info-content" v-for="(item,index) in articlesFilterLists.random" :key="index">
+                          <a href="#" >
+                            {{item.articleText}}
+                          </a>
+                        </li>
+                      </ul>
                   </table-pane>
                 </table-change>
               </div>
@@ -77,14 +99,40 @@
               </div>
             </base-panel>
             <!-- 最近评论 -->
-            <base-panel height="40rem" margin="0 0 2rem 0">
+            <base-panel  margin="0 0 2rem 0" >
               <div class="commont-container">
                 <div class="title">
                   最近评论
                 </div>
                 <base-one-px/>
+                <ul style="margin: 2rem">
+                  <li class="commont-li" v-for="(item,index) in newestComment" :key="index">
+
+                    <div class="comment-container">
+                      <div class="left">
+                        <a>
+                          <img :src="item.avatar" >
+                        </a>
+                      </div>
+                      <div class="right">
+                        <div class="comment-meta">
+                          <span class="comment-author"><b>{{ item.nickname }}</b></span>
+                          <span class="comment-metadata">{{ transformTimes(item.createdAt) }}</span>
+                        </div>
+                        <div class="comment-content">
+                          <span class="comment-content-true">
+                            <p>
+                              <a href="#">{{ item.commentContent }}</a>
+                            </p>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </base-panel>
+
           </div>
         </aside>
       </div>
@@ -98,7 +146,11 @@ import { onBeforeRouteUpdate } from 'vue-router'
 import { useStore } from 'vuex'
 import TableChange from '@/components/table/TableChange.vue'
 import TablePane from '@/components/table/TablePane.vue'
-import { throttle } from '@/utils/commonUse'
+import { throttle, transformTimes } from '@/utils/commonUse'
+import { getWebsiteInfo } from '@/api/common/websiteInfo'
+import { getArticlesFilterList } from '@/api/article'
+import { getNewestComment } from '@/api/comment'
+
 export default defineComponent({
   name: 'BlogThemeOneMain',
   components: {
@@ -118,6 +170,7 @@ export default defineComponent({
     // 是否显示样式
     const isAffixMove = computed(() => store.state.blogThemeOneMain.isAffixMove)
     const isAffixBottom = computed(() => store.state.blogThemeOneMain.isAffixBottom)
+    const websiteInfo = computed(() => store.state.websiteInfo)
     // 初始top值
     const initTop = ref<number>(0)
     // top偏差值
@@ -162,6 +215,40 @@ export default defineComponent({
       })
     }
     asideVisual = throttle(asideVisual, 50, 25)
+
+    // 获取网站信息
+    const getWebsiteInfos = async () => {
+      const { data } = await getWebsiteInfo()
+      if (data.status === 200) {
+        console.log(data)
+        store.dispatch('updateWebsiteInfo', data.data.websiteInfo)
+      }
+    }
+
+    // 获取文章类型
+    const articlesFilterLists = ref({})
+    const getArticlesFilterLists = async () => {
+      const { data } = await getArticlesFilterList({
+        type: 'all'
+      })
+      if (data.status === 200) {
+        console.log(data)
+        articlesFilterLists.value = data.data
+      }
+    }
+
+    // 获取最近评论
+
+    const newestComment = ref([])
+    const getNewestComments = async () => {
+      const { data } = await getNewestComment({
+        limit: 10
+      })
+      if (data.status === 200) {
+        newestComment.value = data.data
+      }
+    }
+
     // 子路由更新重置值
     onBeforeRouteUpdate((to, from, next) => {
       // isAffixMove.value = false
@@ -172,7 +259,9 @@ export default defineComponent({
     onMounted(() => {
       // 更新top值
       initTop.value = sectionWrapRef.value!.getBoundingClientRect().top
-
+      getWebsiteInfos()
+      getArticlesFilterLists()
+      getNewestComments()
       window.addEventListener('scroll', asideVisual)
     })
     onBeforeUnmount(() => {
@@ -185,13 +274,19 @@ export default defineComponent({
       asideWrapRef,
       isAffixMove,
       isAffixBottom,
-      affixTop
+      affixTop,
+      websiteInfo,
+      articlesFilterLists,
+      newestComment,
+      transformTimes
     }
   }
 })
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/scss/mixin.scss';
+
 #blog-main {
   margin-top: 6rem;
   .main-title {
@@ -301,12 +396,93 @@ export default defineComponent({
         font-size: 1.5rem;
         text-align: center;
       }
+
+      .commont-li {
+        cursor: pointer;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #e5e9ef;
+        .comment-container{
+          min-height: 6rem;
+          display: flex;
+
+        }
+
+        .left {
+          flex: 0 0 6rem;
+          a {
+            height: 4rem;
+            width: 4rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+            img {
+              height: inherit;
+              width: inherit;
+              border-radius: 50%;
+            }
+          }
+        }
+
+        .right {
+          flex: auto;
+          .comment-meta{
+            height: 5rem;
+            display: flex;
+            flex-direction: column;
+            .comment-author {
+              font-size: 1.6rem;
+            }
+            .comment-metadata{
+              font-size: 1.4rem;
+            }
+          }
+          .comment-content{
+            display: flex;
+            font-size: 2rem;
+            .comment-author-at {
+              font-weight: 700;
+            }
+            .comment-content-true {
+              p {
+                margin-bottom: 0;
+                a {
+                  color: black;
+                  @include mulEllipsis;
+                }
+                a:hover {
+                  color: red;
+                }
+              }
+            }
+          }
+
+        }
+      }
     }
 
     .visitors-info-container {
         span {
           font-size: 1.6rem;
           color: var(--bear-color-5);
+        }
+
+        .info-content {
+          height: 4.4rem;
+          line-height: 4rem;
+          font-size: 1.8rem;
+          display: block;
+          text-indent: 1rem;
+          a {
+            color: rgba(0, 0, 0, 0.65);
+            transition: all .3s ease;
+            display: block;
+          }
+        }
+
+        .info-content {
+          a:hover {
+            transform:translate3d(0, 0, 2rem) ;
+            box-shadow: 0 0 16px #c2c2c2;
+          }
         }
     }
   }

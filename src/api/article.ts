@@ -62,3 +62,13 @@ export interface ArticleComment {
 export function submitArticleComment (data: ArticleComment) {
   return axios.post('api/articles/comment', data)
 }
+
+/**
+ * 获取根据类型筛选文章列表
+ *
+ */
+export function getArticlesFilterList (data: any) {
+  return axios.get('api/articles/filterList', {
+    params: data
+  })
+}
