@@ -5,23 +5,23 @@
  * @LastEditors: 小熊熊
  * @LastEditTime: 2021-07-16 15:33:04
  */
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import { registerLayout } from '@/layout/index'
-import { registerBase } from '@/components/base/index'
-import { loadAllPlugins } from '@/plugins/index'
-// import { loadAllDirection } from '@/directive/index'
-import '@/assets/scss/global.scss'
-// import '../mocks/index'
-export const app = createApp(App)
-// 注册全局组件
-registerLayout(app)
-registerBase(app)
-// 注册插件
-loadAllPlugins(app)
+// import { createApp } from 'vue'
+// import App from './App.vue'
+// import router from './router'
+// import store from './store'
+// import { registerLayout } from '@/layout/index'
+// import { registerBase } from '@/components/base/index'
+// import { loadAllPlugins } from '@/plugins/index'
+// // import { loadAllDirection } from '@/directive/index'
+// import '@/assets/scss/global.scss'
+// // import '../mocks/index'
+// export const app = createApp(App)
+// // 注册全局组件
+// registerLayout(app)
+// registerBase(app)
+// // 注册插件
+// loadAllPlugins(app)
 // 注册指令
 // loadAllDirection(app)
 // 挂载
-app.use(store).use(router).mount('#app')
+// app.use(store).use(router).mount('#app')

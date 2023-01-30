@@ -36,9 +36,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, getCurrentInstance, reactive, ref } from 'vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
-import { app } from '@/main'
 import { getArticleList } from '@/api/common/uploadImg'
 export default defineComponent({
   name: 'UploadImage',
@@ -63,13 +62,16 @@ export default defineComponent({
     const imgPreviewRef = ref<HTMLImageElement>()
     const isPreview = ref(false)
     const isPreviewAnimated = ref(false)
+    const internalInstance = getCurrentInstance()
 
     function imageChange (e: Event) {
       if (e.target !== null) {
         const InputHtml = e.target
         // 获取图片
         const file = (InputHtml as HTMLInputElement).files![0]
-        if (file.size >= 5000000) return app.config.globalProperties.$message.info('图片应小于5M')
+        if (file.size >= 5000000) {
+          return internalInstance && internalInstance.appContext.config.globalProperties.$message.info('图片应小于5M')
+        }
         // 显示名字在页面上
         imageName.value = file.name
         // 读图片
@@ -95,7 +97,7 @@ export default defineComponent({
         isPreview.value = true
         isPreviewAnimated.value = true
       } else {
-        app.config.globalProperties.$message.info('请选择图片')
+        internalInstance && internalInstance.appContext.config.globalProperties.$message.info('请选择图片')
       }
     }
 
@@ -118,10 +120,10 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped vars="{ direction }">
+<style lang="scss" scoped >
 .upload-container {
   display: flex;
-  flex-direction: var(--direction);
+  flex-direction: v-bind(direction);
   .upload-content {
     label {
       width: 10rem;

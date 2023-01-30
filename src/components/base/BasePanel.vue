@@ -60,13 +60,13 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss"   vars="{ height, margin, padding, minHeight }">
+<style lang="scss"  >
 .base-panel-container {
-  height: var(--height);
-  min-height: var(--minHeight);
-  margin: var(--margin);
+  height: v-bind(height);
+  min-height: v-bind(minHeight);
+  margin: v-bind(margin);
   background-color: white;
-  padding: var(--padding);
+  padding: v-bind(padding);
   box-shadow: 0 2px 4px rgba(0,0,0,.1),
               0 0 0 1px #CDC9C9;
   border-radius: 10px;

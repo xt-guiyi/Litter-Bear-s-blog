@@ -63,14 +63,14 @@ interface CatageoryData<T> {
 }
 
 // 小说数据
-export const novleData = ref<CatageoryData<NovelInfo>>({
+const novleData = ref<CatageoryData<NovelInfo>>({
   reading: [],
   finishedReading: [],
   unread: [],
   favorite: []
 })
 // 小说总数
-export const novleToal = ref(0)
+const novleToal = ref(0)
 
 // 分类函数
 const catageoryNovle = (novleData: NovelInfo[]) => {

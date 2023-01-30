@@ -1,3 +1,4 @@
+/* eslint-disable no-tabs */
 <!--
  * @Description:
  * @Author: 小熊熊
@@ -26,8 +27,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { app } from '@/main'
+import { defineComponent, getCurrentInstance, ref } from 'vue'
+// import { app } from '@/main'
+
 import useWangEditor from '@/composable/useWangEditor'
 import { submitSentences, SentencesData } from '@/api/shortSentences'
 import { releaseShortSentencesConfig } from '@/config/wangEditor'
@@ -57,7 +59,9 @@ export default defineComponent({
         const { data } = await submitSentences(sentencesLData)
         console.log(data)
       } else {
-        app.config.globalProperties.$message.info('内容未填写')
+        // app.config.globalProperties.$message.info('内容未填写')
+        const internalInstance = getCurrentInstance()
+        if (internalInstance) internalInstance.appContext.config.globalProperties.$message.info('内容未填写')
       }
       modalVisible.value = false
     }

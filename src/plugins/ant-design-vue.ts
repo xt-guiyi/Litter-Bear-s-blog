@@ -6,7 +6,7 @@
  * @LastEditTime: 2020-12-08 21:28:19
  */
 import { Form, message, Tabs, Tag, Tooltip, Input, Modal, Upload, Pagination, notification, Table } from 'ant-design-vue'
-// import 'ant-design-vue/dist/antd.less'
+import 'ant-design-vue/dist/antd.less'
 import { createApp } from 'vue'
 /**
  * @description 手动注册 antd-vue 组件,达到按需加载目的

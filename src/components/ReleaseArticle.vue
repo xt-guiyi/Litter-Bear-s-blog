@@ -60,8 +60,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { app } from '@/main'
+import { defineComponent, getCurrentInstance, ref } from 'vue'
+// import { app } from '@/main'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import useAddTag from '@/composable/useAddTag'
 import useWangEditor from '@/composable/useWangEditor'
@@ -114,7 +114,9 @@ export default defineComponent({
         const { data } = await submitArticle(articleData)
         console.log(data)
       } else {
-        app.config.globalProperties.$message.info('内容未填写完整')
+        // app.config.globalProperties.$message.info('内容未填写完整')
+        const internalInstance = getCurrentInstance()
+        if (internalInstance) internalInstance.appContext.config.globalProperties.$message.info('内容未填写')
       }
       modalVisible.value = false
     }

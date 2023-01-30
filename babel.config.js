@@ -4,13 +4,14 @@ module.exports = {
   ],
   // 需要添加的内容
   plugins: [
-    [
-      'import',
-      {
-        libraryName: 'ant-design-vue',
-        libraryDirectory: 'es',
-        style: true
-      }
-    ]
+    // [
+    //   'import',
+    //   {
+    //     libraryName: 'ant-design-vue',
+    //     // libraryDirectory: 'es',
+    //     libraryDirectory: 'lib',
+    //     style: true
+    //   }
+    // ]
   ]
 }

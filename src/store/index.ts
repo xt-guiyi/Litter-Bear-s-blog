@@ -8,33 +8,35 @@
 import { createStore } from 'vuex'
 import { domRef } from './domRef/index'
 
-export default createStore({
-  state: {
-    blogThemeOneMain: {
-      isAffixBottom: false,
-      isAffixMove: false
+export default function () {
+  return createStore({
+    state: {
+      blogThemeOneMain: {
+        isAffixBottom: false,
+        isAffixMove: false
+      },
+      websiteInfo: {}
     },
-    websiteInfo: {}
-  },
-  mutations: {
-    updateBlogThemeOneMain (state, { isAffixBottom, isAffixMove }) {
-      state.blogThemeOneMain.isAffixBottom = isAffixBottom
-      state.blogThemeOneMain.isAffixMove = isAffixMove
-    },
+    mutations: {
+      updateBlogThemeOneMain (state, { isAffixBottom, isAffixMove }) {
+        state.blogThemeOneMain.isAffixBottom = isAffixBottom
+        state.blogThemeOneMain.isAffixMove = isAffixMove
+      },
 
-    updateWebsiteInfo (state, data) {
-      state.websiteInfo = data
-    }
-  },
-  actions: {
-    updateBlogThemeOneMain ({ commit }, payload) {
-      commit('updateBlogThemeOneMain', payload)
+      updateWebsiteInfo (state, data) {
+        state.websiteInfo = data
+      }
     },
-    updateWebsiteInfo ({ commit }, payload) {
-      commit('updateWebsiteInfo', payload)
+    actions: {
+      updateBlogThemeOneMain ({ commit }, payload) {
+        commit('updateBlogThemeOneMain', payload)
+      },
+      updateWebsiteInfo ({ commit }, payload) {
+        commit('updateWebsiteInfo', payload)
+      }
+    },
+    modules: {
+      domRef
     }
-  },
-  modules: {
-    domRef
-  }
-})
+  })
+}

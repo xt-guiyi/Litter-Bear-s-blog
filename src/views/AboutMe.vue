@@ -18,7 +18,7 @@
 import { getAboutMy } from '@/api/common/aboutMy'
 import { onMounted, ref } from 'vue'
 
-export const aboutMy = ref('')
+const aboutMy = ref('')
 const getAboutMys = async () => {
   const { data } = await getAboutMy()
   if (data.status === 200) {

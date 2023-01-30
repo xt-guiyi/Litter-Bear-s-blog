@@ -30,8 +30,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
-export const friendlyLinks = ref([])
-export const websiteInfo = computed(() => store.state.websiteInfo)
+const friendlyLinks = ref([])
+const websiteInfo = computed(() => store.state.websiteInfo)
 
 const getFriendlyLinks = async () => {
   const { data } = await getFriendlyLink()
